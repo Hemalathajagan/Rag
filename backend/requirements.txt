@@ -1,0 +1,14 @@
+flask
+flask-cors
+openai
+langchain
+langchain-community
+langchain-openai
+faiss-cpu
+sentence-transformers
+neo4j
+pypdf
+python-docx
+pytesseract
+pillow
+python-dotenv
