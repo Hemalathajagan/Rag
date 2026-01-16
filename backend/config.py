@@ -13,6 +13,7 @@ NEO4J_URI = os.getenv("NEO4J_URI")
 NEO4J_USER = os.getenv("NEO4J_USER")
 NEO4J_PASSWORD = os.getenv("NEO4J_PASSWORD")
 
-# Chunking
-CHUNK_SIZE = 500
-CHUNK_OVERLAP = 100 
+# Chunking - larger chunks = fewer API calls = faster processing
+CHUNK_SIZE = 1000
+CHUNK_OVERLAP = 100
+MAX_CHUNKS = 20  # Limit chunks to prevent timeout

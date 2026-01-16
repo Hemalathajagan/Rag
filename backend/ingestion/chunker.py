@@ -1,4 +1,4 @@
-from config import CHUNK_SIZE, CHUNK_OVERLAP
+from config import CHUNK_SIZE, CHUNK_OVERLAP, MAX_CHUNKS
 
 
 def chunk_text(text: str) -> list:
@@ -60,6 +60,10 @@ def chunk_text(text: str) -> list:
 
         # Prevent infinite loop
         if start >= len(text) or end >= len(text):
+            break
+
+        # Limit number of chunks to prevent timeout
+        if len(chunks) >= MAX_CHUNKS:
             break
 
     return chunks
