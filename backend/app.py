@@ -14,6 +14,11 @@ CORS(app)  # Enable CORS for all routes
 vectorstore = None
 
 
+@app.route("/", methods=["GET"])
+def health():
+    return jsonify({"status": "healthy", "message": "KG RAG Backend is running"})
+
+
 @app.route("/upload", methods=["POST"])
 def upload():
     global vectorstore
