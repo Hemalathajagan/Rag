@@ -22,18 +22,26 @@ function App() {
     setError(null);
 
     try {
-      await uploadDocument(file);
+      const result = await uploadDocument(file);
       setDocumentName(file.name);
       setIsDocumentUploaded(true);
       setIsUploadModalOpen(false);
       setMessages([]); // Clear previous messages
       setLastResponse(null);
 
+      // Build welcome message with KG stats
+      const kgNodes = result.kg_nodes || 0;
+      const kgRels = result.kg_relationships || 0;
+      let kgInfo = '';
+      if (kgNodes > 0 || kgRels > 0) {
+        kgInfo = `\n\n📊 Knowledge Graph built: ${kgNodes} entities and ${kgRels} relationships extracted.`;
+      }
+
       // Add welcome message
       setMessages([
         {
           id: Date.now(),
-          content: `Great! I've processed "${file.name}". You can now ask me questions about this document. I'll use both semantic search and knowledge graph analysis to find the best answers.`,
+          content: `Great! I've processed "${file.name}". You can now ask me questions about this document. I'll use both semantic search and knowledge graph analysis to find the best answers.${kgInfo}`,
           isUser: false,
           timestamp: new Date(),
         },

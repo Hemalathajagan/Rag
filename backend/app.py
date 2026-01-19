@@ -26,26 +26,35 @@ def upload():
         return jsonify({"error": "No file selected"}), 400
 
     try:
-        print(f"[1/4] Saving file: {file.filename}")
+        print(f"[1/5] Saving file: {file.filename}")
         from ingestion.file_loader import save_file
         path = save_file(file)
 
-        print(f"[2/4] Extracting text from: {path}")
+        print(f"[2/5] Extracting text from: {path}")
         from ingestion.text_extractor import extract_text
         text = extract_text(path)
         print(f"Extracted {len(text)} characters")
 
-        print(f"[3/4] Chunking text...")
+        print(f"[3/5] Chunking text...")
         from ingestion.chunker import chunk_text
         chunks = chunk_text(text)
         print(f"Created {len(chunks)} chunks")
 
-        print(f"[4/4] Building vector store (this may take a moment)...")
+        print(f"[4/5] Building vector store (this may take a moment)...")
         from embeddings.vector_store import build_vector_store
         vectorstore = build_vector_store(chunks)
 
+        print(f"[5/5] Building Knowledge Graph...")
+        from kg.graph_builder import build_knowledge_graph, clear_knowledge_graph
+        clear_knowledge_graph()  # Clear old data for fresh upload
+        kg_result = build_knowledge_graph(text)
+
         print("Document processed successfully!")
-        return jsonify({"status": "Document processed successfully"})
+        return jsonify({
+            "status": "Document processed successfully",
+            "kg_nodes": kg_result.get("nodes_created", 0),
+            "kg_relationships": kg_result.get("relationships_created", 0)
+        })
     except Exception as e:
         print(f"ERROR: {str(e)}")
         print(traceback.format_exc())
